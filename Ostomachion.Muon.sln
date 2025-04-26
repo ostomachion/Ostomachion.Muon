@@ -5,6 +5,8 @@ VisualStudioVersion = 17.13.35913.81 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ostomachion.Muon", "Ostomachion.Muon\Ostomachion.Muon.csproj", "{4A022EC9-F5FF-4A3C-BA55-ADBE6BC37EF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ostomachion.Muon.Tests", "Ostomachion.Muon.Tests\Ostomachion.Muon.Tests.csproj", "{91E7A22E-8C81-442E-BB9F-FBB30C079BE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{4A022EC9-F5FF-4A3C-BA55-ADBE6BC37EF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A022EC9-F5FF-4A3C-BA55-ADBE6BC37EF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A022EC9-F5FF-4A3C-BA55-ADBE6BC37EF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E7A22E-8C81-442E-BB9F-FBB30C079BE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E7A22E-8C81-442E-BB9F-FBB30C079BE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E7A22E-8C81-442E-BB9F-FBB30C079BE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E7A22E-8C81-442E-BB9F-FBB30C079BE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
