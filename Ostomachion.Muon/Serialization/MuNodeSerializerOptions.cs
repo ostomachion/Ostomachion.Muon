@@ -13,6 +13,4 @@ public readonly record struct MuNodeSerializerOptions()
             field = value;
         }
     } = 4;
-
-    public string Indentation => new(UseSpacesForIndentation ? ' ' : '\t', CharactersPerIndentationLevel);
 }

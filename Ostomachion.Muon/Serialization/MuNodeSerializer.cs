@@ -3,44 +3,67 @@ using Ostomachion.Muon.Ast;
 
 namespace Ostomachion.Muon.Serialization;
 
-public class MuNodeSerializer(MuNodeSerializerOptions options)
+public partial class MuNodeSerializer(MuNodeSerializerOptions options)
 {
     public static readonly MuNodeSerializer Default = new(MuNodeSerializerOptions.Default);
+
+    public string _indentation = new(options.UseSpacesForIndentation ? ' ' : '\t', options.CharactersPerIndentationLevel);
 
     public MuNodeSerializer() : this(MuNodeSerializerOptions.Default) { }
 
     public string Serialize(MuNode node)
     {
         var stringBuilder = new StringBuilder();
-        AddToStringBuilder(node, stringBuilder, currentIndentation: "");
-        return stringBuilder.ToString();
-    }
+        var indentationTracker = new IndentationTracker(options);
+        var continueOnSameLine = true;
+        var stack = new Stack<MuNodeConsumer>();
+        stack.Push(new MuNodeConsumer(node));
 
-    private void AddToStringBuilder(MuNode node, StringBuilder stringBuilder, string currentIndentation)
-    {
-        stringBuilder.Append(currentIndentation);
-        stringBuilder.Append(node.Name);
-        if (node.Children.Count == 0)
+        while (stack.Count > 0)
         {
-            stringBuilder.Append(';');
-        }
-        else if (node.Children.Count == 1)
-        {
-            stringBuilder.Append(' ');
-            AddToStringBuilder(node.Children[0], stringBuilder, currentIndentation);
-        }
-        else
-        {
-            stringBuilder.Append(" {");
-            stringBuilder.AppendLine();
-            foreach (var child in node.Children)
+            var consumer = stack.Peek();
+            if (consumer.TryConsumeName(out var name))
             {
-                AddToStringBuilder(child, stringBuilder, currentIndentation + options.Indentation);
-                stringBuilder.AppendLine();
-            }
+                if (!continueOnSameLine)
+                {
+                    stringBuilder.AppendLine();
+                    stringBuilder.Append(indentationTracker.GetIndentation());
+                }
 
-            stringBuilder.Append(currentIndentation);
-            stringBuilder.Append('}');
+                stringBuilder.Append(name);
+                continueOnSameLine = consumer.ChildCount == 1;
+
+                if (consumer.ChildCount > 1)
+                {
+                    stringBuilder.Append( " {");
+                    indentationTracker.Indent();
+                }
+                else if (consumer.ChildCount == 1)
+                {
+                    stringBuilder.Append(' ');
+                }
+            }
+            else if (consumer.ChildEnumerator.MoveNext())
+            {
+                stack.Push(consumer.ChildEnumerator.Current);
+            }
+            else
+            {
+                var parent = stack.Pop();
+                if (parent.ChildCount == 0)
+                {
+                    stringBuilder.Append(';');
+                }
+                else if (parent.ChildCount > 1)
+                {
+                    indentationTracker.Unindent();
+                    stringBuilder.AppendLine();
+                    stringBuilder.Append(indentationTracker.GetIndentation());
+                    stringBuilder.Append('}');
+                }
+            }
         }
+
+        return stringBuilder.ToString();
     }
 }
